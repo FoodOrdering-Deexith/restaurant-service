@@ -14,6 +14,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/v1/restaurant")
+@CrossOrigin(origins = "http://localhost:8100")
 public class RestaurantController {
 
     @Autowired
@@ -32,8 +33,6 @@ public class RestaurantController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
-
-
 
     @PostMapping
     public ResponseEntity<?> createRestaurant(@RequestBody RestaurantDTO restaurantDTO) {

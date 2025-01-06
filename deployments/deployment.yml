@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: restaurantserviceapp
+  labels:
+    app: restaurantserviceapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: restaurantserviceapp
+  template:
+    metadata:
+      labels:
+        app: restaurantserviceapp
+    spec:
+      containers:
+        - name: restaurantserviceapp
+          image: deexith/restaurant-service:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 9091
+          env:
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: secret
+                  key: mysql-username
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: secret
+                  key: mysql-password
+            - name: SPRING_DATASOURCE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: configmap
+                  key: restaurantdb_url
+            - name: SPRING_DATA_RDS_DB
+              value: "restaurant"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: restaurant-service
+spec:
+  selector:
+    app: restaurantserviceapp
+  ports:
+    - protocol: TCP
+      port: 9091
+      targetPort: 9091
