@@ -24,6 +24,12 @@ pipeline {
       }
     }
 
+    stage('Run Code Coverage') {
+          steps {
+            sh 'mvn test'
+          }
+        }
+
     stage('Docker Build and Push') {
           steps {
               sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
